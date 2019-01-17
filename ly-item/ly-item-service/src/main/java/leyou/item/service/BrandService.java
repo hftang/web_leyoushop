@@ -8,6 +8,7 @@ import leyou.item.mapper.BrandMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
@@ -35,8 +36,8 @@ public class BrandService {
 
         }
         //查询
-        if(StringUtils.isNotBlank(key)){
-            example.createCriteria().orLike("name","%"+key+"%").orEqualTo("letter",key.toUpperCase());
+        if (StringUtils.isNotBlank(key)) {
+            example.createCriteria().orLike("name", "%" + key + "%").orEqualTo("letter", key.toUpperCase());
         }
 
         List<Brand> list = this.brandMapper.selectByExample(example);
@@ -44,6 +45,28 @@ public class BrandService {
         //获取总条数信息
         PageInfo<Brand> pageInfo = new PageInfo<>(list);
 
-        return new PageResult<>(pageInfo.getTotal(),pageInfo.getList());
+        return new PageResult<>(pageInfo.getTotal(), pageInfo.getList());
+    }
+
+    /**
+     * 保存brand
+     *
+     * @param brand
+     * @param ids
+     */
+
+    //添加事物
+    @Transactional
+    public void save(Brand brand, List<Long> ids) {
+
+        //新增品牌 插入成功后就有 bid
+        this.brandMapper.insert(brand);
+        //新增品牌和分类的中间表
+
+        for (Long cid : ids) {
+            this.brandMapper.insertCategoryBrand(cid, brand.getId());
+        }
+
+
     }
 }

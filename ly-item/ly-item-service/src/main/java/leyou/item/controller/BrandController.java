@@ -6,10 +6,9 @@ import leyou.item.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author hftang
@@ -23,7 +22,16 @@ public class BrandController {
     @Autowired
     private BrandService brandService;
 
-
+    /**
+     * 查询品牌
+     *
+     * @param page
+     * @param rows
+     * @param sortBy
+     * @param desc
+     * @param key
+     * @return
+     */
     @GetMapping("page")
     public ResponseEntity<PageResult<Brand>> queryBrandByPage(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
@@ -33,12 +41,25 @@ public class BrandController {
             @RequestParam(value = "key", required = false) String key) {
 
 
-        PageResult<Brand> result = this.brandService.queryBrandPage(page, rows, sortBy,desc, key);
+        PageResult<Brand> result = this.brandService.queryBrandPage(page, rows, sortBy, desc, key);
 
         if (result == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         return ResponseEntity.ok(result);
+    }
+
+    /**
+     * 保存brand
+     *
+     * @param brand
+     * @param ids
+     * @return
+     */
+    @PostMapping
+    public ResponseEntity<Void> saveBrand(Brand brand, @RequestParam("categories") List<Long> ids) {
+        this.brandService.save(brand, ids);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 
