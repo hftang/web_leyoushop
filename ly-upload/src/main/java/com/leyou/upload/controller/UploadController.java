@@ -31,11 +31,12 @@ public class UploadController {
 
     @PostMapping("image")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
-        System.out.println("=======>");
+
         String url = uploadService.uploadImage(file);
         if (StringUtils.isBlank(url)) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+        System.out.println("controller 返回：" +url);
         return ResponseEntity.ok(url);
     }
 

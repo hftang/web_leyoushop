@@ -30,7 +30,6 @@ public class CategoryController {
     public ResponseEntity<List<Category>> queryCategoryById(@RequestParam("pid") Long pid) {
 
         List<Category> list = categoryService.queryCategoryById(pid);
-        System.out.println("--------->controller:"+pid);
         if (list == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }

@@ -2,6 +2,8 @@ package leyou.item.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.leyou.common.enums.ExceptionEnum;
+import com.leyou.common.exception.LyException;
 import com.leyou.common.pojo.PageResult;
 import com.leyou.item.pojo.Brand;
 import leyou.item.mapper.BrandMapper;
@@ -58,15 +60,29 @@ public class BrandService {
     //添加事物
     @Transactional
     public void save(Brand brand, List<Long> ids) {
-
         //新增品牌 插入成功后就有 bid
         this.brandMapper.insert(brand);
         //新增品牌和分类的中间表
-
         for (Long cid : ids) {
             this.brandMapper.insertCategoryBrand(cid, brand.getId());
         }
 
+    }
+
+    /**
+     * 根据id 查品牌
+     *
+     * @param id
+     * @return
+     */
+
+    public Brand queryBrandById(Long id) {
+        Brand brand = this.brandMapper.selectByPrimaryKey(id);
+        if (brand == null) {
+            throw new LyException(ExceptionEnum.BRAND_NOT_FOUND);
+        }
+
+        return brand;
 
     }
 }

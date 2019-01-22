@@ -27,4 +27,13 @@ fdfs:
     width: 150
     height: 150
   tracker-list:            #TrackerList参数,支持多个
-    - 192.168.1.105:22122  #虚拟机IP地址
+    - 192.168.135.129:22122  #虚拟机IP地址
+
+ly:
+  upload:
+    baseUrl: "http://image.leyou.com/"
+    allowTypes:
+      - image/jpeg
+      - image/png
+      - image/bmp
+      - image/jpg
