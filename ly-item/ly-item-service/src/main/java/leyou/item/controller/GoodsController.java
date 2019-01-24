@@ -1,13 +1,16 @@
 package leyou.item.controller;
 
 import com.leyou.common.pojo.PageResult;
+import com.leyou.item.pojo.Sku;
 import com.leyou.item.pojo.Spu;
+import com.leyou.item.pojo.SpuDetail;
 import leyou.item.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author hftang
@@ -36,9 +39,44 @@ public class GoodsController {
             @RequestParam(value = "saleable", required = false) Boolean saleable,
             @RequestParam(value = "key", required = false) String key) {
 
+        return ResponseEntity.ok(goodsService.querySpuByPage(page, rows, saleable, key));
+    }
 
+    /***
+     * 保存商品（商品的新增）
+     * @param spu
+     * @return
+     */
+    @PostMapping("goods")
+    public ResponseEntity<Void> saveGoods(@RequestBody Spu spu) {
+        goodsService.saveGoods(spu);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 
-        return ResponseEntity.ok(goodsService.querySpuByPage(page,rows,saleable,key));
+    /**
+     * 根据spuid 查询 spudetail
+     *
+     * @param spuid
+     * @return
+     */
+
+    @GetMapping("/spu/detail/{id}")
+    public ResponseEntity<SpuDetail> queryDetailById(@PathVariable("id") Long spuid) {
+        return ResponseEntity.ok(goodsService.queryDetailById(spuid));
+    }
+
+    @GetMapping("/sku/list")
+    public ResponseEntity<List<Sku>> querySkuById(@RequestParam("id") Long spuid) {
+
+        return ResponseEntity.ok(goodsService.querySkuListBySpuId(spuid));
+
+    }
+
+    @PutMapping("goods")
+    public ResponseEntity<Void> updateGoods(@RequestBody Spu spuObj) {
+        goodsService.updateGoods(spuObj);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

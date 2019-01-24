@@ -48,15 +48,18 @@ public class SpecificationService {
     }
 
     /**
-     * 根据组gid 查询参数
+     * 根据组gid cid 是否查询字段 查询参数
      *
      * @param gid
      * @return
      */
-    public List<SpecParam> queryParamsByGid(Long gid) {
+    public List<SpecParam> queryParamsByList(Long gid,Long cid,Boolean searching) {
 
         SpecParam specParam = new SpecParam();
         specParam.setGroupId(gid);
+        specParam.setCid(cid);
+        specParam.setSearching(searching);
+
         List<SpecParam> paramList = specParamMapper.select(specParam);
 
         if (CollectionUtils.isEmpty(paramList)) {

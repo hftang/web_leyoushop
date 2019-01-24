@@ -25,7 +25,7 @@ public class SpecificationController {
     private SpecificationService specificationService;
 
     @GetMapping("groups/{cid}")
-    public ResponseEntity<List<SpecGroup>> queryGroupByCid(@PathVariable("cid") long cid){
+    public ResponseEntity<List<SpecGroup>> queryGroupByCid(@PathVariable("cid") long cid) {
 
 
         return ResponseEntity.ok(specificationService.queryGroupByCid(cid));
@@ -33,15 +33,18 @@ public class SpecificationController {
 
     /**
      * 根据组id 查询 参数
+     *
      * @param gid
      * @return
      */
 
     @GetMapping("params")
-    public ResponseEntity<List<SpecParam>> queryParamByGid(@RequestParam("gid") Long gid){
+    public ResponseEntity<List<SpecParam>> queryParamByList(@RequestParam(value = "gid", required = false) Long gid,
+                                                            @RequestParam(value = "cid", required = false) Long cid,
+                                                            @RequestParam(value = "searching", required = false) Boolean searching) {
 
 
-        return ResponseEntity.ok(specificationService.queryParamsByGid(gid));
+        return ResponseEntity.ok(specificationService.queryParamsByList(gid, cid, searching));
 
     }
 

@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
@@ -84,5 +85,21 @@ public class BrandService {
 
         return brand;
 
+    }
+
+    /***
+     * 根据 分类id 查询 品牌
+     * @param cid
+     * @return
+     */
+
+    public List<Brand> queryBrandByCid(Long cid) {
+
+        List<Brand> brands = brandMapper.queryByCategoryByCid(cid);
+        if (CollectionUtils.isEmpty(brands)) {
+            throw new LyException(ExceptionEnum.BRAND_NOT_FOUND);
+        }
+
+        return brands;
     }
 }
