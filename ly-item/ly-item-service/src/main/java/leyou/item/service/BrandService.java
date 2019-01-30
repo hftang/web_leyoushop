@@ -9,6 +9,7 @@ import com.leyou.item.pojo.Brand;
 import leyou.item.mapper.BrandMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -101,5 +102,14 @@ public class BrandService {
         }
 
         return brands;
+    }
+
+    public List<Brand> queryBrandByIds(List<Long> ids) {
+        List<Brand> brands = brandMapper.selectByIdList(ids);
+        if (CollectionUtils.isEmpty(brands)) {
+            throw new LyException(ExceptionEnum.BRAND_NOT_FOUND);
+        }
+        return brands;
+
     }
 }

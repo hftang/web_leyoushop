@@ -19,6 +19,7 @@ zuul:
   prefix: /api # 添加路由前缀
   retryable: true
   routes:
+    search-service: /search/**
     item-service: /item/**
     upload-service:
       path: /upload/**

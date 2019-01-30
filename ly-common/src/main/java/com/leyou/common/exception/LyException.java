@@ -2,6 +2,8 @@ package com.leyou.common.exception;
 
 import com.leyou.common.enums.ExceptionEnum;
 import lombok.Getter;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
  * @author hftang
@@ -12,6 +14,7 @@ import lombok.Getter;
 public class LyException extends RuntimeException {
 
     private ExceptionEnum exceptionEnum;
+
 
     public LyException(ExceptionEnum exceptionEnum) {
         this.exceptionEnum = exceptionEnum;
