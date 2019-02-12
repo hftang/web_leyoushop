@@ -13,7 +13,10 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author hftang
@@ -68,6 +71,36 @@ public class SpecificationService {
         }
 
         return paramList;
+
+    }
+
+    public List<SpecGroup> queryListByCid(Long cid) {
+
+        //查询规格组
+        List<SpecGroup> specGroups = queryGroupByCid(cid);
+        //查询组内参数
+        List<SpecParam> specParams = queryParamsByList(null, cid, null);
+
+        Map<Long,List<SpecParam>> map=new HashMap<>();
+
+        for (SpecParam item: specParams){
+
+            if(!map.containsKey(item.getGroupId())){
+                map.put(item.getGroupId(),new ArrayList<>());
+            }
+
+            map.get(item.getGroupId()).add(item);
+        }
+
+        for (SpecGroup specGroup : specGroups) {
+            specGroup.setParams(map.get(specGroup.getId()));
+        }
+
+
+
+
+        return specGroups;
+
 
     }
 }
