@@ -11,6 +11,7 @@ import leyou.item.mapper.SpuDetailMapper;
 import leyou.item.mapper.SpuMapper;
 import leyou.item.mapper.StockMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,9 @@ public class GoodsService {
     private SkuMapper skuMapper;
     @Autowired
     private StockMapper stockMapper;
+
+    @Autowired
+    private AmqpTemplate amqpTemplate;//发送rabbitmq消息
 
 
     public PageResult<Spu> querySpuByPage(Integer page, Integer rows, Boolean saleable, String key) {
@@ -152,6 +156,9 @@ public class GoodsService {
             throw new LyException(ExceptionEnum.GOODS_SAVE_ERROR);
         }
 
+        //发送rabbitmq消息
+        amqpTemplate.convertAndSend("item.insert",spu.getId());
+
 
     }
 
@@ -201,14 +208,16 @@ public class GoodsService {
         return skuList;
     }
 
+    /***
+     * 更新商品
+     * @param spu
+     */
     @Transactional
     public void updateGoods(Spu spu) {
 
         if (spu.getId() == null) {
             throw new LyException(ExceptionEnum.GOODS_ID_ERROR);
         }
-
-
         Sku sku = new Sku();
         sku.setSpuId(spu.getId());
         //查询sku
@@ -236,12 +245,10 @@ public class GoodsService {
             throw new LyException(ExceptionEnum.GOODS_UPDATE_ERROR);
         }
         //新增 sku 和库存
-
         //2 新增 detail
 //        SpuDetail spuDetail = spu.getSpuDetail();
 //        spuDetail.setSpuId(spu.getId());
         spuDetailMapper.updateByPrimaryKey(spu.getSpuDetail());
-
         //3 新增sku
         List<Sku> skus = spu.getSkus();
         List<Stock> stockList = new ArrayList<>();//批量插入
@@ -249,7 +256,6 @@ public class GoodsService {
             sku02.setCreateTime(new Date());
             sku02.setLastUpdateTime(sku02.getCreateTime());
             sku02.setSpuId(spu.getId());
-
 
             int counter = skuMapper.insert(sku02);
             if (counter != 1) {
@@ -266,6 +272,11 @@ public class GoodsService {
 //        if (o != 1) {
 //            throw new LyException(ExceptionEnum.GOODS_SAVE_ERROR);
 //        }
+
+        //发送rabbitmq 消息 告诉搜索微服务和静态页生成的微服务 发生了改变
+        amqpTemplate.convertAndSend("item.update",spu.getId());
+
+
 
     }
 
@@ -286,11 +297,6 @@ public class GoodsService {
         //查询详情
         SpuDetail spuDetail = queryDetailById(id);
         spu.setSpuDetail(spuDetail);
-
-
-
-
-
 
         return spu;
     }

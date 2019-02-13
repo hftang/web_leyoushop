@@ -31,6 +31,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.leyou.common</groupId>
             <artifactId>ly-common</artifactId>
@@ -38,10 +39,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.25</version>
         </dependency>
-
-
-
     </dependencies>
 </project>

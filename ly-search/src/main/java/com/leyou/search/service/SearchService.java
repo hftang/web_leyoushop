@@ -357,4 +357,29 @@ public class SearchService {
             return null;
         }
     }
+
+    /**
+     * 增加或者修改 索引库
+     *
+     * @param spuId
+     */
+    public void createOrUpdate(Long spuId) {
+        //查询spu
+        Spu spu = goodsClient.querySpuById(spuId);
+        //构建good
+        Goods goods = buildGoods(spu);
+        //存入索引库
+        goodsRespository.save(goods);
+
+
+    }
+
+    /**
+     * 处理删除的索引
+     * @param spuId
+     */
+    public void deleteIndex(Long spuId) {
+
+        goodsRespository.deleteById(spuId);
+    }
 }
