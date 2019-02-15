@@ -103,11 +103,11 @@ public class GoodsService {
      * @param spu
      */
     @Transactional
-    public void saveGoods(Spu spu) {
+    public void  saveGoods(Spu spu) {
 
-        //1新增spu
+        //1新增sp     恩恩   2看哦2空瓶
         spu.setId(null);
-        spu.setCreateTime(new Date());
+        spu.setCreateTime(new Date())     ;
         spu.setLastUpdateTime(spu.getCreateTime());
         spu.setSaleable(true);
         spu.setValid(false);

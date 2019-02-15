@@ -25,6 +25,8 @@ zuul:
       path: /upload/**
       serviceId: upload-service
       strip-prefix: false
+    user-service:
+      path: /user/**
 ribbon:
   ConnectTimeout: 250 # 连接超时时间(ms)
   ReadTimeout: 2000 # 通信超时时间(ms)
