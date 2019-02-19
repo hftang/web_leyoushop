@@ -25,8 +25,10 @@ zuul:
       path: /upload/**
       serviceId: upload-service
       strip-prefix: false
-    user-service:
-      path: /user/**
+    user-service: /user/**
+    auth-service: /auth/**  # 授权中心微服务
+  add-host-header: true #携带请求本身的head头信息
+  sensitive-headers:
 ribbon:
   ConnectTimeout: 250 # 连接超时时间(ms)
   ReadTimeout: 2000 # 通信超时时间(ms)

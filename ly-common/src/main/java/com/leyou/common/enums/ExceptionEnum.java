@@ -24,7 +24,7 @@ public enum ExceptionEnum {
     GOODS_NOT_FOUND(400, "商品未查询到"),
     GOODS_NOT_SALEABLE(400, "商品未上架"),
     GOODS_UPDATE_ERROR(500, "商品更新失败"),
-    GOODS_DETAIL_ERROR(400,"商品详情不存在"),
+    GOODS_DETAIL_ERROR(400, "商品详情不存在"),
     DELETE_GOODS_ERROR(500, "删除商品错误"),
     UPDATE_SALEABLE_ERROR(500, "更新商品销售状态错误"),
     STOCK_NOT_ENOUGH(500, "商品库存不足"),
@@ -60,12 +60,11 @@ public enum ExceptionEnum {
     SPEC_GROUP_NOT_FOUND(204, "规格组查询失败"),
     DELETE_SPEC_GROUP_FAILED(500, "商品规格组删除失败"),
     UPDATE_SPEC_GROUP_FAILED(500, "商品规格组更新失败"),
-
+    GENER_TOKEN_FAILED(500, "token生成失败"),
 
     ;
     int value;
     String message;
-
 
 
     public int value() {
