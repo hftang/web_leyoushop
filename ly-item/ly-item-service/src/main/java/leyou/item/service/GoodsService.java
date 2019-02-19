@@ -103,11 +103,11 @@ public class GoodsService {
      * @param spu
      */
     @Transactional
-    public void  saveGoods(Spu spu) {
+    public void saveGoods(Spu spu) {
 
         //1新增sp     恩恩   2看哦2空瓶
         spu.setId(null);
-        spu.setCreateTime(new Date())     ;
+        spu.setCreateTime(new Date());
         spu.setLastUpdateTime(spu.getCreateTime());
         spu.setSaleable(true);
         spu.setValid(false);
@@ -157,7 +157,7 @@ public class GoodsService {
         }
 
         //发送rabbitmq消息
-        amqpTemplate.convertAndSend("item.insert",spu.getId());
+        amqpTemplate.convertAndSend("item.insert", spu.getId());
 
 
     }
@@ -274,8 +274,7 @@ public class GoodsService {
 //        }
 
         //发送rabbitmq 消息 告诉搜索微服务和静态页生成的微服务 发生了改变
-        amqpTemplate.convertAndSend("item.update",spu.getId());
-
+        amqpTemplate.convertAndSend("item.update", spu.getId());
 
 
     }
@@ -299,5 +298,27 @@ public class GoodsService {
         spu.setSpuDetail(spuDetail);
 
         return spu;
+    }
+
+    public List<Sku> querySkuByIds(List<Long> ids) {
+
+        List<Sku> skus = skuMapper.selectByIdList(ids);
+
+        if (CollectionUtils.isEmpty(skus)) {
+            throw new LyException(ExceptionEnum.SKU_NOT_FOUND);
+        }
+
+        //查库存
+        List<Stock> stocks = stockMapper.selectByIdList(ids);
+        if (CollectionUtils.isEmpty(stocks)) {
+            throw new LyException(ExceptionEnum.STOCK_NOT_FOUND);
+        }
+
+        Map<Long, Integer> stockMap = stocks.stream().collect(Collectors.toMap(Stock::getSkuId, Stock::getStock));
+
+        //把库存数据给组装过去
+        skus.forEach(s -> s.setStock(stockMap.get(s.getId())));
+
+        return skus;
     }
 }

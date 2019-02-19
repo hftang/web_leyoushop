@@ -27,6 +27,7 @@ zuul:
       strip-prefix: false
     user-service: /user/**
     auth-service: /auth/**  # 授权中心微服务
+    cart-service: /cart/**  #购物车
   add-host-header: true #携带请求本身的head头信息
   sensitive-headers:
 ribbon:
