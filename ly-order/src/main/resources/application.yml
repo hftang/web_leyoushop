@@ -1,0 +1,32 @@
+server:
+  port: 8089
+
+spring:
+  application:
+    name: order-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/heima915?characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root
+    hikari:
+      maximum-pool-size: 30
+      minimum-idle: 10
+  jackson:
+    default-property-inclusion: non_null # 空字段不需要返回
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+    registry-fetch-interval-seconds: 5
+  instance:
+    ip-address: 127.0.0.1
+    prefer-ip-address: true
+mybatis:
+  type-aliases-package: com.leyou.order.pojo
+
+
+leyou:
+  jwt:
+    pubKeyPath: D:\\javaweb\\rsa\\rsa.pub # 公钥地址
+    cookieName: LY_TOKEN
