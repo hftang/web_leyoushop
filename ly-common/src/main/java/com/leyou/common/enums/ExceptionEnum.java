@@ -62,6 +62,9 @@ public enum ExceptionEnum {
     UPDATE_SPEC_GROUP_FAILED(500, "商品规格组更新失败"),
     GENER_TOKEN_FAILED(500, "token生成失败"),
 
+
+    CART_NOT_FOUND(500,"购物车数据异常")
+
     ;
     int value;
     String message;
