@@ -1,6 +1,6 @@
-package com.leyou.config;
+package com.leyou.order.config;
 
-import com.leyou.interceptor.UserInterceptor;
+import com.leyou.order.interceptor.UserInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

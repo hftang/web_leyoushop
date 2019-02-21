@@ -1,8 +1,8 @@
-package com.leyou.interceptor;
+package com.leyou.order.interceptor;
 
 import com.leyou.auth.entity.UserInfo;
 import com.leyou.auth.utils.JwtUtils;
-import com.leyou.config.JwtProperties;
+import com.leyou.order.config.JwtProperties;
 import com.leyou.utils.CookieUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;

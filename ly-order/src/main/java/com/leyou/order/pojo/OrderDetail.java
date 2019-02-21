@@ -1,0 +1,63 @@
+package com.leyou.order.pojo;
+import lombok.Data;
+import tk.mybatis.mapper.annotation.KeySql;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * @author hftang
+ * @date 2019-02-20 15:38
+ * @desc
+ */
+/**
+ * @Author: 98050
+ * @Time: 2018-10-27 16:34
+ * @Feature: 订单详情信息实体类
+ */
+@Data
+@Table(name = "tb_order_detail")
+public class OrderDetail {
+
+    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @KeySql(useGeneratedKeys = true)
+    private Long id;
+
+    /**
+     * 订单id
+     */
+    private Long orderId;
+
+    /**
+     * 商品id
+     */
+    private Long skuId;
+
+    /**
+     * 商品购买数量
+     */
+    private Integer num;
+
+    /**
+     * 商品标题
+     */
+    private String title;
+
+    /**
+     * 商品单价
+     */
+    private Double price;
+
+    /**
+     * 商品规格数据
+     */
+    private String ownSpec;
+
+    /**
+     * 图片
+     */
+    private String image;
+}
