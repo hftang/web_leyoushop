@@ -13,9 +13,10 @@ import java.util.List;
  */
 public abstract class AddressClient {
 
-    public static final List<AddressDTO> addressList = new ArrayList<AddressDTO>() {
+    public static  List<AddressDTO> addressList = new ArrayList<AddressDTO>() ;
 
-        {
+    static {
+
             AddressDTO address01 = new AddressDTO();
             address01.setId(1L);
             address01.setAddress("北京市昌平区4号");
@@ -29,7 +30,7 @@ public abstract class AddressClient {
             addressList.add(address01);
 
             AddressDTO address02 = new AddressDTO();
-            address02.setId(1L);
+            address02.setId(2L);
             address02.setAddress("北京市昌平区4号");
             address02.setCity("北京");
             address02.setDistrict("昌平区");
@@ -40,9 +41,8 @@ public abstract class AddressClient {
 
             addressList.add(address02);
 
-        }
 
-    };
+    }
 
 
     public static AddressDTO findById(Long id) {

@@ -63,18 +63,21 @@ public enum ExceptionEnum {
     GENER_TOKEN_FAILED(500, "token生成失败"),
 
 
-    CART_NOT_FOUND(500,"购物车数据异常")
+    CART_NOT_FOUND(500, "购物车数据异常"),
 
-    ;
+    CREATE_ORDER_FAILED(500, "订单创建失败"),
+    STOCK_NO_ENOUGH(500, "库存不足异常"),
+    ORDER_STATUE_FAILED(500, "订单状态异常"),
+    ORDER_DETAILS_FAILED(500, "订单详情异常");
     int value;
     String message;
 
 
-    public int value() {
+    public int getCode() {
         return this.value;
     }
 
-    public String message() {
+    public String getMsg() {
         return this.message;
     }
 }

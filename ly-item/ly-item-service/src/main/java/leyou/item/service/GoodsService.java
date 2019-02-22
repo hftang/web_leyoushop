@@ -2,6 +2,7 @@ package leyou.item.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.leyou.common.dto.CartDTO;
 import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exception.LyException;
 import com.leyou.common.pojo.PageResult;
@@ -320,5 +321,22 @@ public class GoodsService {
         skus.forEach(s -> s.setStock(stockMap.get(s.getId())));
 
         return skus;
+    }
+
+    /***
+     * 减库存的操作
+     * @param list
+     */
+    @Transactional
+    public void decreaseStock(List<CartDTO> list) {
+        for (CartDTO cart : list) {
+            int i = stockMapper.decreaseStock(cart.getSkuId(), cart.getNum());
+            if (i != 1) {
+                throw new LyException(ExceptionEnum.STOCK_NOT_ENOUGH);
+            }
+
+        }
+
+
     }
 }

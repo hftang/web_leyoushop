@@ -25,12 +25,12 @@ public class Order {
      * 总金额
      */
     @NotNull
-    private Double totalPay;
+    private Long totalPay;
     /**
      * 实付金额
      */
     @NotNull
-    private Double actualPay;
+    private Long actualPay;
 
     /**
      * 支付类型，1、在线支付，2、货到付款
@@ -46,7 +46,7 @@ public class Order {
     /**
      * 邮费
      */
-    private String postFee;
+    private Long postFee;
 
     /**
      * 创建时间

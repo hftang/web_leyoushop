@@ -49,7 +49,7 @@ public class OrderDetail {
     /**
      * 商品单价
      */
-    private Double price;
+    private Long price;
 
     /**
      * 商品规格数据
