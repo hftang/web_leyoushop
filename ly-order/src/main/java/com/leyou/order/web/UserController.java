@@ -40,7 +40,28 @@ public class UserController {
     @GetMapping("{id}")
     public ResponseEntity<Order> queryOrderByOrderId(@PathVariable("id") Long id) {
 
-        return ResponseEntity.ok( this.orderService.queryOrderByOrderId(id));
+        return ResponseEntity.ok(this.orderService.queryOrderByOrderId(id));
     }
+
+    /**
+     * 创建支付连接
+     * @param orderId
+     * @return
+     */
+    @GetMapping("/url/{id}")
+    public ResponseEntity<String> createPayUrl(@PathVariable("id") Long orderId) {
+
+        return ResponseEntity.ok(this.orderService.createPayUrl(orderId));
+    }
+
+    /**
+     * 查询订单状态
+     */
+    @GetMapping("/state/{id}")
+    public ResponseEntity<Integer> queryOrderStatue(@PathVariable("id") Long id){
+
+        return ResponseEntity.ok(this.orderService.queryOrderStateByOrderid(id).getValue());
+    }
+
 
 }

@@ -68,7 +68,13 @@ public enum ExceptionEnum {
     CREATE_ORDER_FAILED(500, "订单创建失败"),
     STOCK_NO_ENOUGH(500, "库存不足异常"),
     ORDER_STATUE_FAILED(500, "订单状态异常"),
-    ORDER_DETAILS_FAILED(500, "订单详情异常");
+    ORDER_DETAILS_FAILED(500, "订单详情异常"),
+    ORDER_STATUS_ERROR(500, "订单状态不正确"),
+    ORDER_PARAM_ERROR(500,"订单参数有误"),
+    INVALID_SIGN_ERROR(500, "无效的签名"),
+    WX_PAY_ORDER_FAILED(500, "微信下单失败"),
+    UPDATE_ORDER_STATUE_ERROR(500,"更新账单状态失败")
+    ;
     int value;
     String message;
 

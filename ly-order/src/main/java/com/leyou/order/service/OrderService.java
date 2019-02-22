@@ -10,6 +10,7 @@ import com.leyou.order.client.GoodsClient;
 import com.leyou.order.dto.AddressDTO;
 import com.leyou.order.dto.OrderDTO;
 import com.leyou.order.enums.OrderStatusEnum;
+import com.leyou.order.enums.PayState;
 import com.leyou.order.interceptor.UserInterceptor;
 import com.leyou.order.mapper.OrderDetailMapper;
 import com.leyou.order.mapper.OrderMapper;
@@ -17,6 +18,7 @@ import com.leyou.order.mapper.OrderStatusMapper;
 import com.leyou.order.pojo.Order;
 import com.leyou.order.pojo.OrderDetail;
 import com.leyou.order.pojo.OrderStatus;
+import com.leyou.order.utils.PayHelper;
 import com.leyou.utils.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -49,6 +51,8 @@ public class OrderService {
     private IdWorker idWorker;
     @Autowired
     private GoodsClient goodsClient;
+    @Autowired
+    private PayHelper payHelper;
 
     /***
      * 创建订单
@@ -193,5 +197,113 @@ public class OrderService {
 
         return order;
 
+    }
+
+    /***
+     * 根据订单id 生成支付连接
+     * @param orderId
+     * @return
+     */
+    public String createPayUrl(Long orderId) {
+        //查询订单
+        Order order = queryOrderByOrderId(orderId);
+        //判断一下订单的状态
+        OrderStatus orderStatus = order.getOrderStatus();
+        log.info("[订单状态]：" + orderStatus);
+
+//        if (!order.getOrderStatus().equals(OrderStatusEnum.UNPAY.value())) {
+//            throw new LyException(ExceptionEnum.ORDER_STATUS_ERROR);
+//        }
+        //获取总金额 实际支付金额
+        Long totalPay = order.getActualPay();
+        //商品描述
+        String desc = order.getOrderDetails().get(0).getTitle();
+        String helperPayUrl = this.payHelper.createPayUrl(orderId, totalPay, desc);
+
+        return helperPayUrl;
+    }
+
+    /**
+     * 支付成功后 回调的校验
+     *
+     * @param result
+     */
+
+    public void handleNotify(Map<String, String> result) {
+
+        //1回调数据的校验
+        payHelper.isSuccess(result);
+
+        //2校验签名
+        payHelper.isValidSign(result);
+
+        //3校验金额是否对
+        String total_fee = result.get("total_fee");
+        String tradeNo = result.get("out_trade_no");
+
+
+        if (StringUtils.isEmpty(total_fee)) {
+            throw new LyException(ExceptionEnum.ORDER_PARAM_ERROR);
+        }
+
+        //返回订单的金额
+        long totalFee = Long.parseLong(total_fee);
+
+        //得到id 去查
+        long orderId = Long.parseLong(tradeNo);
+        Order order = this.orderMapper.selectByPrimaryKey(tradeNo);
+
+        //金额
+        Long actualPay = order.getActualPay();
+
+        //4查到的金额 和 回调回来的金额做比较 actualPay
+        if (totalFee != 1) {
+            //金额不符
+            throw new LyException(ExceptionEnum.ORDER_PARAM_ERROR);
+        }
+
+        //5以上都过了 开始修改订单状态
+        OrderStatus orderStatus = new OrderStatus();
+        orderStatus.setStatus(OrderStatusEnum.UNPAY.value());
+        orderStatus.setOrderId(orderId);
+        orderStatus.setPaymentTime(new Date());
+        int count = orderStatusMapper.updateByPrimaryKeySelective(orderStatus);
+
+        if (count != 1) {
+            throw new LyException(ExceptionEnum.ORDER_STATUS_EXCEPTION);
+        }
+
+        log.info("[订单支付成功] 订单编号：" + orderId);
+
+
+    }
+
+    /***
+     * 查询 订单状态 回调回来后
+     * @param id
+     * @return
+     */
+    public PayState queryOrderStateByOrderid(Long id) {
+
+        OrderStatus orderStatus = orderStatusMapper.selectByPrimaryKey(id);
+        Integer status = orderStatus.getStatus();
+
+        /**
+         * 从数据库中查询账单的支付状态
+         * 如果已支付 那就是真的支付了
+         * 如果未支付 那不一定没有支付 需要等待 或者查询 微信端 看底是不是真的没有支付
+         */
+        if (status != PayState.NOT_PAY.getValue()) {
+
+            log.info("[orderService 微信再次请求订单状态：] payState："+status);
+            return PayState.SUCCESS;
+        }
+
+        PayState payState = payHelper.queryPayState(id);
+
+        log.info("[orderService 微信再次请求订单状态：] payState："+payState);
+
+
+        return payState;
     }
 }
